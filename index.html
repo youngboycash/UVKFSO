@@ -268,6 +268,13 @@
     border-color:var(--gold-bright);
     background: rgba(8,12,18,0.8);
   }
+  .field input[type="date"]{ color-scheme: dark; }
+  .field input[type="date"]::-webkit-calendar-picker-indicator{
+    filter: invert(70%) sepia(46%) saturate(662%) hue-rotate(346deg) brightness(101%) contrast(94%);
+    cursor:pointer;
+    opacity:0.9;
+  }
+  .field input[type="date"]::-webkit-calendar-picker-indicator:hover{ opacity:1; }
   .field textarea{resize:vertical; min-height:110px;}
   .row2{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 
@@ -481,6 +488,7 @@
   const overlay = document.getElementById('bgOverlay');
   const nav = document.getElementById('siteNav');
   const toTop = document.getElementById('toTop');
+  const siteFooter = document.querySelector('footer');
   let ticking = false;
 
   toTop.addEventListener('click', ()=>{
@@ -514,11 +522,17 @@
     nav.classList.toggle('solid', y > 40);
     nav.classList.toggle('visible', y > 40);
     toTop.classList.toggle('show', y > window.innerHeight * 0.6);
+
+    const footerRect = siteFooter.getBoundingClientRect();
+    const overlap = window.innerHeight - footerRect.top;
+    toTop.style.bottom = overlap > 0 ? (22 + overlap) + 'px' : '';
+
     ticking = false;
   }
   window.addEventListener('scroll', () => {
     if(!ticking){ requestAnimationFrame(updateOnScroll); ticking = true; }
   }, { passive:true });
+  window.addEventListener('resize', updateOnScroll);
   updateOnScroll();
 
   // Smooth anchor scroll
